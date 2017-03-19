@@ -1,0 +1,21 @@
+{
+    "name": "beardedandnotmuch/yii2-jwt-user",
+    "type": "yii2-extension",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Arthur Skobara",
+            "email": "skobara.arthur@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "lcobucci/jwt": "~3.2"
+    },
+    "autoload": {
+        "psr-4": {"beardedandnotmuch\\user\\": "src/"}
+    },
+    "extra": {
+        "bootstrap": "beardedandnotmuch\\user\\Bootstrap"
+    }
+}
