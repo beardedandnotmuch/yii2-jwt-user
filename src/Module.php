@@ -41,6 +41,9 @@ class Module extends BaseModule
         'POST auth' => 'registrations/create',
         'PUT auth' => 'registrations/update',
         'DELETE auth' => 'registrations/delete',
+
+        'GET profile' => 'profile/get',
+        'PUT profile' => 'profile/update',
     ];
 
     /**
