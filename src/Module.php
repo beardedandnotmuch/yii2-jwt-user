@@ -44,6 +44,8 @@ class Module extends BaseModule
 
         'GET profile' => 'profile/get',
         'PUT profile' => 'profile/update',
+
+        'POST password' => 'password/change',
     ];
 
     /**

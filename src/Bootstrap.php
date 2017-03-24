@@ -13,6 +13,7 @@ class Bootstrap implements BootstrapInterface
         'User'             => 'beardedandnotmuch\user\models\User',
         'Token'            => 'beardedandnotmuch\user\models\Token',
         'LoginForm'        => 'beardedandnotmuch\user\models\LoginForm',
+        'PasswordForm'     => 'beardedandnotmuch\user\models\PasswordForm',
     ];
 
     /**

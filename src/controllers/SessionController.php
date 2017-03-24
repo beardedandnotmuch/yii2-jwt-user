@@ -8,8 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\filters\auth\HttpBearerAuth;
-use Lcobucci\JWT\Builder as JWTBuilder;
-use Lcobucci\JWT\Signer\Hmac\Sha256 as Signer;
+use beardedandnotmuch\user\helpers\JWT;
 
 class SessionController extends BaseController
 {
@@ -43,19 +42,7 @@ class SessionController extends BaseController
         if ($model->load($request->post()) && $model->login()) {
             $user = $model->getUser();
 
-            $now = time();
-
-            $token = (new JWTBuilder())
-                ->setIssuer($request->hostInfo)
-                ->setAudience($request->hostInfo)
-                ->setId($user->getId(), true)
-                ->setIssuedAt($now)
-                ->setNotBefore($now)
-                ->setExpiration($now + 3600)
-                ->sign(new Signer(), $user->getSecretKey())
-                ->getToken();
-
-            return ['token' => (string) $token];
+            return ['token' => JWT::token($user)];
         }
 
         return $model;
