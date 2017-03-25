@@ -33,16 +33,23 @@ class RegistrationsController extends BaseController
      */
     public function actionCreate()
     {
-        $model = Yii::createObject($this->module->modelMap['RegistrationForm']);
+        $form = Yii::createObject($this->module->modelMap['RegistrationForm']);
         $request = Yii::$app->getRequest();
         $security = Yii::$app->getSecurity();
 
-        $model->load($request->post());
-        if ($user = $model->register()) {
-            return $user->toArray(['id', 'email']);
+        $form->setAttributes($request->post());
+
+        if (!$form->validate()) {
+            return $form;
         }
 
-        return $model;
+        $user = $form->register();
+
+        if ($user->hasErrors()) {
+            return $user;
+        }
+
+        return $user->toArray(['id', 'email']);
     }
 
     /**
