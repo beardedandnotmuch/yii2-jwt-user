@@ -8,13 +8,10 @@ use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
 use yii\filters\auth\HttpBearerAuth;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use beardedandnotmuch\user\helpers\JWT;
 
 class PasswordController extends BaseController
 {
-    use ModuleTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -35,7 +32,7 @@ class PasswordController extends BaseController
      */
     public function actionChange()
     {
-        $form = Yii::createObject($this->module->modelMap['PasswordForm']);
+        $form = Yii::$container->get('beardedandnotmuch\user\models\PasswordForm');
         $form->setAttributes(Yii::$app->getRequest()->post());
 
         if (!$form->validate()) {

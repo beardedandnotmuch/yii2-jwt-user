@@ -3,14 +3,11 @@
 namespace beardedandnotmuch\user\models;
 
 use Yii;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\base\Model;
 use yii\web\UnauthorizedHttpException;
 
 class PasswordForm extends Model
 {
-    use ModuleTrait;
-
     public $old_password;
 
     public $new_password;

@@ -3,13 +3,10 @@
 namespace beardedandnotmuch\user\models;
 
 use Yii;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\base\Model;
 
 class LoginForm extends Model
 {
-    use ModuleTrait;
-
     public $login;
 
     public $password;
@@ -22,22 +19,6 @@ class LoginForm extends Model
         return [
             'requiredFields' => [['login'], 'required'],
             'loginTrim' => ['login', 'trim'],
-            'confirmationValidate' => [
-                'login',
-                function ($attribute) {
-                    if ($this->user !== null) {
-                        $confirmationRequired = $this->module->enableConfirmation && !$this->module->enableUnconfirmedLogin;
-
-                        if ($confirmationRequired && !$this->user->getIsConfirmed()) {
-                            $this->addError($attribute, Yii::t('user', 'You need to confirm your email address'));
-                        }
-
-                        if ($this->user->getIsBlocked()) {
-                            $this->addError($attribute, Yii::t('user', 'Your account has been blocked'));
-                        }
-                    }
-                }
-            ],
             'requiredFields' => [['login', 'password'], 'required'],
             'passwordValidate' => ['password', 'validatePassword'],
         ];
@@ -45,7 +26,6 @@ class LoginForm extends Model
 
     /**
      * Validates if the hash of the given password is identical to the saved hash in the database.
-     * It will always succeed if the module is in DEBUG mode.
      *
      * @return void
      */

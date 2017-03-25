@@ -16,7 +16,7 @@ class JWT
      */
     public static function token($user)
     {
-        $class = Yii::$app->getModule('user')->modelMap['User'];
+        $class = Yii::$app->getUser()->identityClass;
 
         if (!($user instanceof $class)) {
             throw new Exception("Argument should be instance of \"$class\"");

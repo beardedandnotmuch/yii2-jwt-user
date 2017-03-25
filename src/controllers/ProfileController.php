@@ -6,7 +6,6 @@ use Yii;
 use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\filters\auth\HttpBearerAuth;
 
 class ProfileController extends BaseController

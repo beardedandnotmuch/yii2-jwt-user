@@ -2,13 +2,11 @@
 
 namespace beardedandnotmuch\user\models;
 
-use beardedandnotmuch\user\traits\ModuleTrait;
 use Yii;
 use yii\base\Model;
 
 class RegistrationForm extends Model
 {
-    use ModuleTrait;
     /**
      * @var string User email address
      */
@@ -28,7 +26,7 @@ class RegistrationForm extends Model
      */
     public function rules()
     {
-        $user = $this->module->modelMap['User'];
+        $user = get_class(Yii::$container->get('beardedandnotmuch\user\models\User'));
 
         return [
             // email rules

@@ -6,14 +6,11 @@ use Yii;
 use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\filters\auth\HttpBearerAuth;
 use beardedandnotmuch\user\helpers\JWT;
 
 class SessionController extends BaseController
 {
-    use ModuleTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -36,16 +33,17 @@ class SessionController extends BaseController
      */
     public function actionCreate()
     {
-        $model = Yii::createObject($this->module->modelMap['LoginForm']);
         $request = Yii::$app->getRequest();
+        $form = Yii::$container->get('beardedandnotmuch\user\models\LoginForm');
+        $form->setAttributes($request->post());
 
-        if ($model->load($request->post()) && $model->login()) {
-            $user = $model->getUser();
+        if ($form->login()) {
+            $user = $form->getUser();
 
             return ['token' => JWT::token($user)];
         }
 
-        return $model;
+        return $form;
     }
 
     /**

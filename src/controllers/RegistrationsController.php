@@ -4,13 +4,10 @@ namespace beardedandnotmuch\user\controllers;
 
 use Yii;
 use yii\rest\Controller as BaseController;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\filters\auth\HttpBearerAuth;
 
 class RegistrationsController extends BaseController
 {
-    use ModuleTrait;
-
     /**
      * {@inheritdoc}
      */
@@ -33,7 +30,7 @@ class RegistrationsController extends BaseController
      */
     public function actionCreate()
     {
-        $form = Yii::createObject($this->module->modelMap['RegistrationForm']);
+        $form = Yii::$container->get('beardedandnotmuch\user\models\RegistrationForm');
         $request = Yii::$app->getRequest();
         $security = Yii::$app->getSecurity();
 

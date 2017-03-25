@@ -8,7 +8,6 @@ use yii\web\IdentityInterface;
 use yii\filters\RateLimitInterface;
 use yii\web\ServerErrorHttpException;
 use yii\behaviors\TimestampBehavior;
-use beardedandnotmuch\user\traits\ModuleTrait;
 use yii\db\Expression;
 use yii\web\UnauthorizedHttpException;
 use Lcobucci\JWT\Parser as JWTParser;
@@ -26,8 +25,6 @@ use Lcobucci\JWT\Signer\Hmac\Sha256 as Signer;
  */
 class User extends BaseModel implements IdentityInterface, RateLimitInterface
 {
-    use ModuleTrait;
-
     const EVENT_SEND_CONFIRMATION = 'sendConfirmation';
     const RATE_LIMIT_WINDOW = 600;
 
