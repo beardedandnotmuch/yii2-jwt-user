@@ -50,17 +50,9 @@ class RegistrationForm extends Model
     }
 
     /**
-     * @inheritdoc
-     */
-    public function formName()
-    {
-        return '';
-    }
-
-    /**
      * Registers a new user account. If registration was successful it will set flash message.
      *
-     * @return bool
+     * @return User
      */
     public function register()
     {
@@ -71,8 +63,6 @@ class RegistrationForm extends Model
         /** @var User $user */
         $user = Yii::createObject(User::class);
         $this->loadAttributes($user);
-
-        $this->sendConfirmation($user);
 
         if (!$user->save()) {
             throw new \Exception('not saved');

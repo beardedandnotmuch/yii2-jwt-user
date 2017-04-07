@@ -15,13 +15,14 @@ class Module extends BaseModule implements BootstrapInterface
         'User'             => 'beardedandnotmuch\user\models\User',
         'LoginForm'        => 'beardedandnotmuch\user\models\LoginForm',
         'PasswordForm'     => 'beardedandnotmuch\user\models\PasswordForm',
+        'RegistrationForm' => 'beardedandnotmuch\user\models\RegistrationForm',
     ];
 
-    public $enableConfirmation = true;
-
-    public $enableUnconfirmedLogin = false;
-
-    public $enableGeneratingPassword = false;
+    /**
+     * @var bool
+     * Login user right after registration.
+     */
+    public $forceLogin = false;
 
     /**
      * @var string The prefix for user module URL.
