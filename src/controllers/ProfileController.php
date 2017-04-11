@@ -30,7 +30,10 @@ class ProfileController extends BaseController
      */
     public function actionGet()
     {
-        return Yii::$app->getUser()->getIdentity();
+        $user = Yii::$app->getUser()->getIdentity();
+        $user->clearErrors();
+
+        return $user;
     }
 
     /**

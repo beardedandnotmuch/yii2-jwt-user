@@ -5,7 +5,6 @@ namespace beardedandnotmuch\user\controllers;
 use Yii;
 use yii\rest\Controller as BaseController;
 use yii\filters\auth\HttpBearerAuth;
-use beardedandnotmuch\user\helpers\JWT;
 
 class RegistrationsController extends BaseController
 {
@@ -37,25 +36,15 @@ class RegistrationsController extends BaseController
 
         $form->setAttributes($request->post());
 
-        if (!$form->validate()) {
+        if (!$form->register()) {
             return $form;
         }
 
-        $user = $form->register();
-
-        if ($user->hasErrors()) {
-            return $user;
-        }
-
-        $additional = [];
-
         if ($this->module->forceLogin) {
-            Yii::$app->getUser()->login($user);
-
-            $additional['token'] = JWT::token($user);
+            Yii::$app->getUser()->login($form->getUser());
         }
 
-        return array_merge($user->toArray(['id', 'email']), $additional);
+        return $form->toArray();
     }
 
     /**

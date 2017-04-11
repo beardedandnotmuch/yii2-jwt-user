@@ -3,20 +3,9 @@
 namespace beardedandnotmuch\user\models;
 
 use Yii;
-use yii\base\Model;
 
-class RegistrationForm extends Model
+class RegistrationForm extends BaseRegistrationForm
 {
-    /**
-     * @var string User email address
-     */
-    public $email;
-
-    /**
-     * @var string Password
-     */
-    public $password;
-
     public $confirm_success_url;
 
     protected $confirm_token;
@@ -26,7 +15,7 @@ class RegistrationForm extends Model
      */
     public function rules()
     {
-        $user = get_class(Yii::$container->get('beardedandnotmuch\user\models\User'));
+        $class = Yii::$app->getUser()->identityClass;
 
         return [
             // email rules
@@ -36,7 +25,7 @@ class RegistrationForm extends Model
             'emailUnique'   => [
                 'email',
                 'unique',
-                'targetClass' => $user,
+                'targetClass' => $class,
                 'message' => Yii::t('app', 'This email address has already been taken')
             ],
             // password rules
@@ -50,35 +39,7 @@ class RegistrationForm extends Model
     }
 
     /**
-     * Registers a new user account. If registration was successful it will set flash message.
-     *
-     * @return User
-     */
-    public function register()
-    {
-        if (!$this->validate()) {
-            return false;
-        }
-
-        /** @var User $user */
-        $user = Yii::createObject(User::class);
-        $this->loadAttributes($user);
-
-        if (!$user->save()) {
-            throw new \Exception('not saved');
-        }
-
-        return $user;
-    }
-
-    /**
-     * Loads attributes to the user model. You should override this method if you are going to add new fields to the
-     * registration form. You can read more in special guide.
-     *
-     * By default this method set all attributes of this model to the attributes of User model, so you should properly
-     * configure safe attributes of your User model.
-     *
-     * @param User $user
+     * {@inheritdoc}
      */
     protected function loadAttributes(User $user)
     {
