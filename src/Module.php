@@ -24,10 +24,6 @@ class Module extends BaseModule implements BootstrapInterface
      */
     public $forceLogin = false;
 
-    public $forceCookie = false;
-
-    public $cookieName = 'jwt-cookie';
-
     /**
      * @var string The prefix for user module URL.
      *
