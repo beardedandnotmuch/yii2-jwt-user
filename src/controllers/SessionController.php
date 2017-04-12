@@ -3,6 +3,8 @@
 namespace beardedandnotmuch\user\controllers;
 
 use Yii;
+use yii\web\User;
+use yii\web\Cookie;
 use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
@@ -27,6 +29,29 @@ class SessionController extends BaseController
                 'only' => ['create'],
             ],
         ]);
+    }
+
+    /**
+     * undocumented function
+     *
+     * @return void
+     */
+    public function init()
+    {
+        parent::init();
+
+        if ($this->module->forceCookie) {
+            Yii::$app->getUser()->on(User::EVENT_AFTER_LOGIN, function ($event) {
+                Yii::$app->getResponse()->getCookies()->add(new Cookie([
+                    'name' => $this->module->cookieName,
+                    'value' => true,
+                ]));
+            });
+
+            Yii::$app->getUser()->on(User::EVENT_AFTER_LOGOUT, function ($event) {
+                Yii::$app->getResponse()->getCookies()->remove($this->module->cookieName);
+            });
+        }
     }
 
     /**
