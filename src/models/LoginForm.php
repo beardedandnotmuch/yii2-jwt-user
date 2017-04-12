@@ -12,12 +12,16 @@ class LoginForm extends Model
     public $password;
 
     /**
+     * @var User
+     */
+    protected $user;
+
+    /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            'requiredFields' => [['login'], 'required'],
             'loginTrim' => ['login', 'trim'],
             'requiredFields' => [['login', 'password'], 'required'],
             'passwordValidate' => ['password', 'validatePassword'],
@@ -31,9 +35,22 @@ class LoginForm extends Model
      */
     public function validatePassword($attribute, $params, $validator)
     {
-        if ($this->user === null || !Yii::$app->security->validatePassword($this->password, $this->user->password_hash)) {
+        $user = $this->getUser();
+
+        if ($user === null || !Yii::$app->security->validatePassword($this->password, $user->password_hash)) {
             $this->addError($attribute, Yii::t('app', 'Invalid login or password'));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fields()
+    {
+        $fields = parent::fields();
+        unset($fields['password']);
+
+        return $fields;
     }
 
     /**
@@ -57,20 +74,10 @@ class LoginForm extends Model
      */
     public function getUser()
     {
-        static $user = null;
-
-        if ($user === null) {
-            $user = User::find(['email' => trim($this->login)])->one();
+        if ($this->user === null) {
+            $this->user = User::find(['email' => $this->login])->one();
         }
 
-        return $user;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function formName()
-    {
-        return '';
+        return $this->user;
     }
 }

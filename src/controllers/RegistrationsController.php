@@ -5,6 +5,7 @@ namespace beardedandnotmuch\user\controllers;
 use Yii;
 use yii\rest\Controller as BaseController;
 use yii\filters\auth\HttpBearerAuth;
+use beardedandnotmuch\user\filters\UpdateToken;
 
 class RegistrationsController extends BaseController
 {
@@ -13,8 +14,15 @@ class RegistrationsController extends BaseController
      */
     public function behaviors()
     {
-        // we don't needs any predefined behaviors of this controller.
-        return array_merge(parent::behaviors(), [
+        $behaviors = parent::behaviors();
+        if ($this->module->forceLogin) {
+            $behaviors['updatetoken'] = [
+                'class' => UpdateToken::class,
+                'only' => ['create'],
+            ];
+        }
+
+        return array_merge($behaviors, [
             'authenticator' => [
                 'class' => HttpBearerAuth::class,
                 'only' => ['update', 'delete'],
@@ -30,9 +38,8 @@ class RegistrationsController extends BaseController
      */
     public function actionCreate()
     {
-        $form = Yii::$container->get('beardedandnotmuch\user\models\RegistrationForm');
         $request = Yii::$app->getRequest();
-        $security = Yii::$app->getSecurity();
+        $form = Yii::$container->get('beardedandnotmuch\user\models\RegistrationForm');
 
         $form->setAttributes($request->post());
 

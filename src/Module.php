@@ -24,6 +24,8 @@ class Module extends BaseModule implements BootstrapInterface
      */
     public $forceLogin = false;
 
+    public $enableSession = false;
+
     /**
      * @var string The prefix for user module URL.
      *
@@ -66,7 +68,7 @@ class Module extends BaseModule implements BootstrapInterface
             Yii::$container->set('yii\web\User', [
                 'identityClass' => $this->modelMap['User'],
                 'enableAutoLogin' => false,
-                'enableSession' => false,
+                'enableSession' => $this->enableSession,
                 'loginUrl' => null,
             ]);
 

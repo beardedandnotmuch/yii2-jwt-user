@@ -7,7 +7,7 @@ use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\filters\auth\HttpBearerAuth;
-use beardedandnotmuch\user\helpers\JWT;
+use beardedandnotmuch\user\filters\UpdateToken;
 
 class SessionController extends BaseController
 {
@@ -21,6 +21,10 @@ class SessionController extends BaseController
             'authenticator' => [
                 'class' => HttpBearerAuth::class,
                 'only' => ['delete'],
+            ],
+            'updatetoken' => [
+                'class' => UpdateToken::class,
+                'only' => ['create'],
             ],
         ]);
     }
@@ -37,13 +41,11 @@ class SessionController extends BaseController
         $form = Yii::$container->get('beardedandnotmuch\user\models\LoginForm');
         $form->setAttributes($request->post());
 
-        if ($form->login()) {
-            $user = $form->getUser();
-
-            return ['token' => JWT::token($user)];
+        if (!$form->login()) {
+            return $form;
         }
 
-        return $form;
+        return $form->toArray();
     }
 
     /**

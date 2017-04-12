@@ -4,7 +4,6 @@ namespace beardedandnotmuch\user\models;
 
 use Yii;
 use yii\base\Model;
-use beardedandnotmuch\user\helpers\JWT;
 
 abstract class BaseRegistrationForm extends Model
 {
@@ -30,15 +29,6 @@ abstract class BaseRegistrationForm extends Model
     {
         $fields = parent::fields();
         unset($fields['password']);
-
-        $user = Yii::$app->getUser()->getIdentity();
-
-        // if forceLogin is true
-        if ($user) {
-            $fields['token'] = function () use ($user) {
-                return JWT::token($user);
-            };
-        }
 
         return $fields;
     }

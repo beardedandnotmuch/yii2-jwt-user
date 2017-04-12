@@ -8,7 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
 use yii\filters\auth\HttpBearerAuth;
-use beardedandnotmuch\user\helpers\JWT;
+use beardedandnotmuch\user\filters\UpdateToken;
 
 class PasswordController extends BaseController
 {
@@ -20,6 +20,9 @@ class PasswordController extends BaseController
         return array_merge(parent::behaviors(), [
             'authenticator' => [
                 'class' => HttpBearerAuth::class,
+            ],
+            'updatetoken' => [
+                'class' => UpdateToken::class,
             ],
         ]);
     }
@@ -47,6 +50,6 @@ class PasswordController extends BaseController
             throw new BadRequestHttpException();
         }
 
-        return ['token' => JWT::token($user)];
+        return ['success' => true];
     }
 }

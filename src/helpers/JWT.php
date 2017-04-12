@@ -12,7 +12,7 @@ class JWT
     /**
      * undocumented function
      *
-     * @return string
+     * @return Lcobucci\JWT\Token;
      */
     public static function token($user)
     {
@@ -25,7 +25,7 @@ class JWT
         $now = time();
         $request = Yii::$app->getRequest();
 
-        $token = (new JWTBuilder())
+        return (new JWTBuilder())
             ->setIssuer($request->hostInfo)
             ->setAudience($request->hostInfo)
             ->setId($user->id, true)
@@ -34,7 +34,5 @@ class JWT
             ->setExpiration($now + 3600)
             ->sign(new Signer(), $user->getSecretKey())
             ->getToken();
-
-        return (string) $token;
     }
 }
