@@ -10,6 +10,8 @@ use yii\web\Response;
 
 class UpdateToken extends BaseFilter
 {
+    public $duration = 24 * 60 * 60;
+
     /**
      * {@inheritdoc}
      */
@@ -21,7 +23,7 @@ class UpdateToken extends BaseFilter
         }
 
         if (is_array($result)) {
-            $token = JWT::token($user->getIdentity());
+            $token = JWT::token($user->getIdentity(), $this->duration);
 
             return array_merge($result, [
                 'token' => (string) $token,
