@@ -10,7 +10,10 @@
     ],
     "require": {
         "yiisoft/yii2": "~2.0.0",
-        "lcobucci/jwt": "~3.2"
+        "lcobucci/jwt": "~3.2",
+        "league/uri-manipulations": "^1.0",
+        "league/uri-schemes": "^1.0",
+        "spomky-labs/base64url": "^1.0"
     },
     "autoload": {
         "psr-4": {"beardedandnotmuch\\user\\": "src/"}

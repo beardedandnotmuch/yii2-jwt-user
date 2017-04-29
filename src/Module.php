@@ -45,7 +45,9 @@ class Module extends BaseModule implements BootstrapInterface
         'GET profile' => 'profile/get',
         'PUT profile' => 'profile/update',
 
-        'POST password' => 'password/change',
+        'PUT password' => 'password/update',
+        'POST password/reset' => 'password/reset',
+        'PUT password/reset' => 'password/replace',
     ];
 
     /**
