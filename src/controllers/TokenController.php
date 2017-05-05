@@ -2,6 +2,8 @@
 
 namespace beardedandnotmuch\user\controllers;
 
+use yii\filters\auth\HttpBearerAuth;
+use beardedandnotmuch\user\filters\UpdateToken;
 use yii\rest\Controller as BaseController;
 
 class TokenController extends BaseController
@@ -12,11 +14,14 @@ class TokenController extends BaseController
     public function behaviors()
     {
         // we don't needs any predefined behaviors of this controller.
-        return [
-            'beardedandnotmuch\user\filters\NgTokenAuth',
-            'beardedandnotmuch\user\filters\UpdateAuthHeaders',
-            'yii\filters\RateLimiter',
-        ];
+        return array_merge(parent::behaviors(), [
+            'authenticator' => [
+                'class' => HttpBearerAuth::class,
+            ],
+            'updatetoken' => [
+                'class' => UpdateToken::class,
+            ],
+        ]);
     }
 
     /**
@@ -25,7 +30,7 @@ class TokenController extends BaseController
      * @return array
      * @throw \yii\web\ForbiddenHttpException
      */
-    public function actionValidate()
+    public function actionUpdate()
     {
         /*
          * @var yii\web\IdentityInterface
@@ -39,10 +44,6 @@ class TokenController extends BaseController
             throw new \yii\web\ForbiddenHttpException('Access denied');
         }
 
-        $extra = array_merge(['role'],
-            $identity->isAdmin() ? ['configs'] : []
-        );
-
-        return $identity->profile->toArray([], $extra);
+        return ['result' => true];
     }
 }

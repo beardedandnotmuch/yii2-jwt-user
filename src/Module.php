@@ -48,6 +48,8 @@ class Module extends BaseModule implements BootstrapInterface
         'PUT password' => 'password/update',
         'POST password/reset' => 'password/reset',
         'PUT password/reset' => 'password/replace',
+
+        'POST heartbeat' => 'token/update',
     ];
 
     /**
