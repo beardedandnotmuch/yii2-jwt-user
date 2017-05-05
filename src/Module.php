@@ -42,8 +42,8 @@ class Module extends BaseModule implements BootstrapInterface
         'PUT auth' => 'registrations/update',
         'DELETE auth' => 'registrations/delete',
 
-        'GET profile' => 'profile/get',
-        'PUT profile' => 'profile/update',
+        'GET /' => 'user/get',
+        'PUT /' => 'user/update',
 
         'PUT password' => 'password/update',
         'POST password/reset' => 'password/reset',

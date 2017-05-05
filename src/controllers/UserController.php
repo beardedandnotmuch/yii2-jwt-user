@@ -8,7 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\filters\auth\HttpBearerAuth;
 
-class ProfileController extends BaseController
+class UserController extends BaseController
 {
     /**
      * {@inheritdoc}
