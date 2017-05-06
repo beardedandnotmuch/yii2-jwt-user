@@ -220,39 +220,39 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface
     /**
      * undocumented function
      *
-     * @return bool
+     * @return $this
      */
     public function setPassword($password)
     {
         $security = Yii::$app->getSecurity();
         $this->setAttribute('password_hash', $security->generatePasswordHash($password));
 
-        return $this->save(true, ['password_hash']);
+        return $this;
     }
 
     /**
      * undocumented function
      *
-     * @return bool
+     * @return $this
      */
     public function setConfirmToken($token)
     {
         $security = Yii::$app->getSecurity();
         $this->setAttribute('confirm_token_hash', $security->generatePasswordHash($token));
 
-        return $this->save(true, ['confirm_token_hash']);
+        return $this;
     }
 
     /**
      * undocumented function
      *
-     * @return bool
+     * @return $this
      */
     public function setResetPasswordToken($token)
     {
         $security = Yii::$app->getSecurity();
         $this->setAttribute('reset_password_token_hash', $security->generatePasswordHash($token));
 
-        return $this->save(true, ['reset_password_token_hash']);
+        return $this;
     }
 }
