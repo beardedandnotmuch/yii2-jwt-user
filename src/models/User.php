@@ -23,7 +23,7 @@ use Lcobucci\JWT\Signer\Hmac\Sha256 as Signer;
  * @property string $created_at
  * @property string $updated_at
  */
-class User extends BaseModel implements IdentityInterface, RateLimitInterface
+class User extends BaseModel implements IdentityInterface, RateLimitInterface, JWTSourceInterface
 {
     const EVENT_SEND_CONFIRMATION = 'sendConfirmation';
     const RATE_LIMIT_WINDOW = 600;

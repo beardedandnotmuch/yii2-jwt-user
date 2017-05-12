@@ -6,6 +6,7 @@ use Yii;
 use Exception;
 use Lcobucci\JWT\Builder as JWTBuilder;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as Signer;
+use beardedandnotmuch\user\models\JWTSourceInterface;
 
 class JWT
 {
@@ -14,21 +15,18 @@ class JWT
      *
      * @return Lcobucci\JWT\Token;
      */
-    public static function token($user, $duration = 3600)
+    public static function token(JWTSourceInterface $user, $duration = 3600)
     {
-        $class = Yii::$app->getUser()->identityClass;
-
-        if (!($user instanceof $class)) {
-            throw new Exception("Argument should be instance of \"$class\"");
-        }
-
         $now = time();
         $request = Yii::$app->getRequest();
+
+        $pk = $user->getPrimaryKey(true);
+        $id = implode(',', $pk);
 
         return (new JWTBuilder())
             ->setIssuer($request->hostInfo)
             ->setAudience($request->hostInfo)
-            ->setId($user->id, true)
+            ->setId($id, true)
             ->setIssuedAt($now)
             ->setNotBefore($now)
             ->setExpiration($now + $duration)
