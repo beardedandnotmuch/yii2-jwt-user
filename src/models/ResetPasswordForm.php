@@ -48,7 +48,7 @@ class ResetPasswordForm extends BaseModel
     {
         $token = password(16);
         $user = $this->getUser();
-        $user->setResetPasswordToken($token);
+        $user->setResetPasswordToken($token)->save();
 
         return Base64Url::encode(json_encode([
             'id' => $user->id,

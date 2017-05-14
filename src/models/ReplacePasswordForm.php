@@ -4,7 +4,9 @@ namespace beardedandnotmuch\user\models;
 
 use Yii;
 use yii\base\Model as BaseModel;
+use yii\helpers\Json;
 use Base64Url\Base64Url;
+use yii\base\InvalidParamException;
 
 class ReplacePasswordForm extends BaseModel
 {
@@ -57,7 +59,11 @@ class ReplacePasswordForm extends BaseModel
     public function getPayload()
     {
         if (!$this->payload) {
-            $this->payload = json_decode(Base64Url::decode($this->token));
+            try {
+                $this->payload = Json::decode(Base64Url::decode($this->token), false);
+            } catch (InvalidParamException $e) {
+                $this->payload = (object) ['id' => null, 'token' => null];
+            }
         }
 
         return $this->payload;
@@ -71,8 +77,9 @@ class ReplacePasswordForm extends BaseModel
     public function getUser()
     {
         if ($this->user === null) {
+            $payload = $this->getPayload();
             $class = Yii::$app->getUser()->identityClass;
-            $this->user = $class::findOne($this->getPayload()->id);
+            $this->user = $class::findOne($payload->id);
         }
 
         return $this->user;
