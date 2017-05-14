@@ -6,7 +6,7 @@ use Yii;
 use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
-use yii\filters\auth\HttpBearerAuth;
+use beardedandnotmuch\user\filters\AuthByToken;
 
 class UserController extends BaseController
 {
@@ -18,7 +18,7 @@ class UserController extends BaseController
         // we don't needs any predefined behaviors of this controller.
         return array_merge(parent::behaviors(), [
             'authenticator' => [
-                'class' => HttpBearerAuth::class,
+                'class' => AuthByToken::class,
             ],
         ]);
     }

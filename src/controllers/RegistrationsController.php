@@ -4,7 +4,7 @@ namespace beardedandnotmuch\user\controllers;
 
 use Yii;
 use yii\rest\Controller as BaseController;
-use yii\filters\auth\HttpBearerAuth;
+use beardedandnotmuch\user\filters\AuthByToken;
 use beardedandnotmuch\user\filters\UpdateToken;
 
 class RegistrationsController extends BaseController
@@ -15,16 +15,19 @@ class RegistrationsController extends BaseController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
+
         if ($this->module->forceLogin) {
             $behaviors['updatetoken'] = [
                 'class' => UpdateToken::class,
+                'useCookie' => $this->module->useCookie,
+                'duration' => $this->module->duration,
                 'only' => ['create'],
             ];
         }
 
         return array_merge($behaviors, [
             'authenticator' => [
-                'class' => HttpBearerAuth::class,
+                'class' => AuthByToken::class,
                 'only' => ['update', 'delete'],
             ],
         ]);

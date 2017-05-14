@@ -6,8 +6,8 @@ use Yii;
 use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
-use yii\filters\auth\HttpBearerAuth;
 use beardedandnotmuch\user\filters\UpdateToken;
+use beardedandnotmuch\user\filters\AuthByToken;
 
 class SessionController extends BaseController
 {
@@ -19,11 +19,13 @@ class SessionController extends BaseController
         // we don't needs any predefined behaviors of this controller.
         return array_merge(parent::behaviors(), [
             'authenticator' => [
-                'class' => HttpBearerAuth::class,
+                'class' => AuthByToken::class,
                 'only' => ['delete'],
             ],
             'updatetoken' => [
                 'class' => UpdateToken::class,
+                'useCookie' => $this->module->useCookie,
+                'duration' => $this->module->duration,
                 'only' => ['create'],
             ],
         ]);
@@ -64,6 +66,10 @@ class SessionController extends BaseController
 
         if (!$identity) {
             throw new NotFoundHttpException('User was not found or was not logged in');
+        }
+
+        if ($this->module->useCookie) {
+            Yii::$app->getResponse()->getCookies()->remove('token');
         }
 
         return $user->logout();

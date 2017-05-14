@@ -25,6 +25,18 @@ class Module extends BaseModule implements BootstrapInterface
     public $forceLogin = false;
 
     /**
+     * @var bool
+     * Send token through cookie.
+     */
+    public $useCookie = false;
+
+    /**
+     * @var integer
+     * Token become expired after this time.
+     */
+    public $duration = 24 * 60 * 60;
+
+    /**
      * @var string The prefix for user module URL.
      *
      * @See [[GroupUrlRule::prefix]]

@@ -7,8 +7,8 @@ use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
-use yii\filters\auth\HttpBearerAuth;
 use beardedandnotmuch\user\filters\UpdateToken;
+use beardedandnotmuch\user\filters\AuthByToken;
 use yii\helpers\Url;
 use League\Uri\Schemes\Http;
 use League\Uri\Modifiers\MergeQuery;
@@ -22,11 +22,13 @@ class PasswordController extends BaseController
     {
         return array_merge(parent::behaviors(), [
             'authenticator' => [
-                'class' => HttpBearerAuth::class,
+                'class' => AuthByToken::class,
                 'only' => ['update'],
             ],
             'updatetoken' => [
                 'class' => UpdateToken::class,
+                'useCookie' => $this->module->useCookie,
+                'duration' => $this->module->duration,
                 'only' => ['update'],
             ],
         ]);
