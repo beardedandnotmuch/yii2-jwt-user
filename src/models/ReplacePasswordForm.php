@@ -25,8 +25,6 @@ class ReplacePasswordForm extends BaseModel
      */
     public function rules()
     {
-        $class = Yii::$app->getUser()->identityClass;
-
         return [
             'requiredFields' => [['token', 'password', 'password_repeat'], 'required'],
 

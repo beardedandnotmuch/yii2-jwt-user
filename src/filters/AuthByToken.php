@@ -20,6 +20,11 @@ class AuthByToken extends AuthMethod
     public $cookieName = 'token';
 
     /**
+     * @var string
+     */
+    public $queryParamName = 'token';
+
+    /**
      * @inheritdoc
      */
     public function authenticate($user, $request, $response)
@@ -28,6 +33,10 @@ class AuthByToken extends AuthMethod
 
         if (!$token) {
             $token = $this->getTokenFromCookie($request);
+        }
+
+        if (!$token) {
+            $token = $this->getTokenFromQuery($request);
         }
 
         if ($token) {
@@ -68,6 +77,16 @@ class AuthByToken extends AuthMethod
         }
 
         return null;
+    }
+
+    /**
+     * Returns token from query.
+     *
+     * @return string|null
+     */
+    protected function getTokenFromQuery($request)
+    {
+        return $request->get($this->queryParamName);
     }
 
     /**
