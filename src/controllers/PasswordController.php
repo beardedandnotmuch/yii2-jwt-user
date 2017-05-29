@@ -51,7 +51,7 @@ class PasswordController extends BaseController
 
         $user = Yii::$app->getUser()->getIdentity();
 
-        return ['success' => $user->setPassword($form->new_password)->save()];
+        return ['success' => $user->setPassword($form->new_password)->save(false)];
     }
 
     /**
@@ -70,7 +70,7 @@ class PasswordController extends BaseController
 
         $user = $form->getUser();
 
-        return ['success' => $user->setPassword($form->password)->save()];
+        return ['success' => $user->setPassword($form->password)->save(false)];
 
     }
 
