@@ -76,7 +76,7 @@ class RegistrationForm extends BaseRegistrationForm
         $url = \Yii::$app->getUrlManager()->createAbsoluteUrl($query);
 
         $mailer = Yii::$app->getMailer();
-        $mailer->setViewPath('@beardedandnotmuch/user/views/mail');
+        $mailer->setViewPath("{$this->module->viewPath}/mail");
 
         $mailer->compose('auth/confirm_email', [
                 'email' => $user->email,

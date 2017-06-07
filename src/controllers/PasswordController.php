@@ -108,7 +108,7 @@ class PasswordController extends BaseController
         ];
 
         $mailer = Yii::$app->getMailer();
-        $mailer->setViewPath('@beardedandnotmuch/user/views/mail');
+        $mailer->setViewPath("{$this->module->viewPath}/mail");
 
         return $mailer->compose('auth/reset_password', $params)
             ->setFrom(Yii::$app->params['adminEmail'])

@@ -43,6 +43,12 @@ class Module extends BaseModule implements BootstrapInterface
      */
     public $urlPrefix = 'api/user';
 
+    /**
+     * @var string
+     * Path to the views.
+     */
+    public $viewPath = '@beardedandnotmuch/user/views';
+
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
         'OPTIONS <_c:.+>' => 'default/options',
