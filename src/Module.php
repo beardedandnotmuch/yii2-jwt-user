@@ -10,6 +10,11 @@ use yii\console\Application as ConsoleApplication;
 
 class Module extends BaseModule implements BootstrapInterface
 {
+    const EVENT_BEFORE_LOGIN = 'beforeLogin';
+    const EVENT_AFTER_LOGIN = 'afterLogin';
+    const EVENT_BEFORE_LOGOUNT = 'beforeLogout';
+    const EVENT_AFTER_LOGOUT = 'afterLogout';
+
     /** @var array Model map */
     public $modelMap = [
         'User'             => 'beardedandnotmuch\user\models\User',

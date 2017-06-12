@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use beardedandnotmuch\user\filters\UpdateToken;
 use beardedandnotmuch\user\filters\AuthByToken;
+use beardedandnotmuch\user\Module;
 
 class SessionController extends BaseController
 {
@@ -39,6 +40,7 @@ class SessionController extends BaseController
      */
     public function actionCreate()
     {
+        $this->module->trigger(Module::EVENT_BEFORE_LOGIN);
         $request = Yii::$app->getRequest();
         $form = Yii::$container->get('beardedandnotmuch\user\models\LoginForm');
         $form->setAttributes($request->post());
@@ -46,6 +48,8 @@ class SessionController extends BaseController
         if (!$form->login()) {
             return $form;
         }
+
+        $this->module->trigger(Module::EVENT_AFTER_LOGIN);
 
         return $form->toArray();
     }
@@ -58,6 +62,8 @@ class SessionController extends BaseController
      */
     public function actionDelete()
     {
+        $this->module->trigger(Module::EVENT_BEFORE_LOGOUNT);
+
         $user = Yii::$app->getUser();
         /*
          * @var yii\web\IdentityInterface
@@ -71,6 +77,8 @@ class SessionController extends BaseController
         if ($this->module->useCookie) {
             Yii::$app->getResponse()->getCookies()->remove('token');
         }
+
+        $this->module->trigger(Module::EVENT_AFTER_LOGOUT);
 
         return $user->logout();
     }
