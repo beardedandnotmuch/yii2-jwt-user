@@ -74,8 +74,13 @@ class SessionController extends BaseController
             throw new NotFoundHttpException('User was not found or was not logged in');
         }
 
+        $response = Yii::$app->getResponse();
+        $behavior = $this->getBehavior('updatetoken');
+
         if ($this->module->useCookie) {
-            Yii::$app->getResponse()->getCookies()->remove('token');
+            $response->getCookies()->remove($behavior->cookieName);
+        } else {
+            $response->getHeaders()->set($behavior->headerName, '');
         }
 
         $this->module->trigger(Module::EVENT_AFTER_LOGOUT);

@@ -15,6 +15,11 @@ class UpdateToken extends BaseFilter
     public $cookieName = 'token';
 
     /**
+     * @var string
+     */
+    public $headerName = 'X-Set-Token';
+
+    /**
      * @var integer
      */
     public $duration = 24 * 60 * 60;
@@ -43,11 +48,8 @@ class UpdateToken extends BaseFilter
             $cookie->expire = time() + (int) $this->duration;
             $cookie->httpOnly = false;
             Yii::$app->getResponse()->getCookies()->add($cookie);
-        } elseif (is_array($result)) {
-
-            return array_merge($result, [
-                'token' => (string) $token,
-            ]);
+        } else {
+            Yii::$app->getResponse()->getHeaders()->set($this->headerName, (string) $token);
         }
 
         return $result;
