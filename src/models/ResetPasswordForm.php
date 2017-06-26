@@ -5,6 +5,8 @@ namespace beardedandnotmuch\user\models;
 use Yii;
 use yii\base\Model as BaseModel;
 use Base64Url\Base64Url;
+use League\Uri\Schemes\Http;
+use League\Uri\Modifiers\MergeQuery;
 
 class ResetPasswordForm extends BaseModel
 {
@@ -40,7 +42,7 @@ class ResetPasswordForm extends BaseModel
     }
 
     /**
-     * undocumented function
+     * Create token for reset password.
      *
      * @return string
      */
@@ -54,6 +56,19 @@ class ResetPasswordForm extends BaseModel
             'id' => $user->id,
             'token' => $token,
         ]));
+    }
+
+    /**
+     * Returns url for email.
+     *
+     * @return string
+     */
+    public function createUrl()
+    {
+        $uri = Http::createFromString($this->redirect_url);
+        $modifier = new MergeQuery("token={$this->createToken()}");
+
+        return (string) $modifier->process($uri);
     }
 
     /**

@@ -10,8 +10,6 @@ use yii\web\BadRequestHttpException;
 use beardedandnotmuch\user\filters\UpdateToken;
 use beardedandnotmuch\user\filters\AuthByToken;
 use yii\helpers\Url;
-use League\Uri\Schemes\Http;
-use League\Uri\Modifiers\MergeQuery;
 
 class PasswordController extends BaseController
 {
@@ -98,11 +96,8 @@ class PasswordController extends BaseController
      */
     protected function sendResetPasswordInstruction($form)
     {
-        $uri = Http::createFromString($form->redirect_url);
-        $modifier = new MergeQuery("token={$form->createToken()}");
-
         $params = [
-            'url' => (string) $modifier->process($uri),
+            'url' => $form->createUrl(),
             'email' => $form->email,
             'text' => 'Someone has requested a link to change your password. You can do this through the link below',
         ];
