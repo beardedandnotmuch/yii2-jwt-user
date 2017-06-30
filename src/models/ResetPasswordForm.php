@@ -32,7 +32,7 @@ class ResetPasswordForm extends BaseModel
                 'email',
                 'exist',
                 'targetClass' => $class,
-                'message' => Yii::t('app', 'Email doesnt exists'),
+                'message' => Yii::t('app', 'Email doesn\'t exists'),
                 'targetAttribute' => 'email',
             ],
 
