@@ -33,13 +33,13 @@ class PasswordForm extends Model
         $user = Yii::$app->getUser()->getIdentity();
 
         if (!$user) {
-            $this->addError($attribute, 'Old password is incorrect');
+            $this->addError($attribute, Yii::t('app', 'Old password is incorrect'));
 
             return;
         }
 
         if (!$security->validatePassword($this->$attribute, $user->password_hash)) {
-            $this->addError($attribute, 'Old password is incorrect');
+            $this->addError($attribute, Yii::t('app', 'Old password is incorrect'));
 
             return;
         }
