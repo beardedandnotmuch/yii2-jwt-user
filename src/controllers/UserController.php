@@ -44,6 +44,8 @@ class UserController extends BaseController
     public function actionUpdate()
     {
         $user = Yii::$app->getUser()->getIdentity();
+        $class = get_class($user);
+        $user->setScenario($class::SCENARIO_UPDATE);
         $user->setAttributes(Yii::$app->getRequest()->post());
 
         $user->save();

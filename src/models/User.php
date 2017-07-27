@@ -32,6 +32,8 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
     const STATUS_INVITED = 2;
     const STATUS_NEED_TO_FILL = 3;
 
+    const SCENARIO_UPDATE = 'update';
+
     /**
      * {@inheritdoc}
      */

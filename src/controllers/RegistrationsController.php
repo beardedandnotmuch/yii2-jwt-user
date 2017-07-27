@@ -28,7 +28,7 @@ class RegistrationsController extends BaseController
         return array_merge($behaviors, [
             'authenticator' => [
                 'class' => AuthByToken::class,
-                'only' => ['update', 'delete'],
+                'optional' => ['create'],
             ],
         ]);
     }
@@ -41,6 +41,10 @@ class RegistrationsController extends BaseController
      */
     public function actionCreate()
     {
+        if (!Yii::$app->getUser()->getIsGuest()) {
+            throw new \yii\web\BadRequestHttpException();
+        }
+
         $request = Yii::$app->getRequest();
         $form = Yii::$container->get('beardedandnotmuch\user\models\RegistrationForm');
 
