@@ -200,6 +200,14 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getTokenClaims()
+    {
+        return [];
+    }
+
+    /**
      * undocumented function
      *
      * @return void

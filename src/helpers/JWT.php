@@ -25,13 +25,19 @@ class JWT
         $pk = $user->getPrimaryKey(true);
         $id = implode(',', $pk);
 
-        return (new JWTBuilder())
+        $builder = (new JWTBuilder())
             ->setIssuer($request->hostInfo)
             ->setAudience($request->hostInfo)
             ->setId($id, true)
             ->setIssuedAt($now)
             ->setNotBefore($now)
-            ->setExpiration($now + $duration)
+            ->setExpiration($now + $duration);
+
+        foreach ($user->getTokenClaims() as $name => $value) {
+            $builder->set($name, $value);
+        }
+
+        return $builder
             ->sign(new Signer(), $user->getSecretKey())
             ->getToken();
     }

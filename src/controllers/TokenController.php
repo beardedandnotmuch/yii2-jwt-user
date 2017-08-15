@@ -40,7 +40,7 @@ class TokenController extends BaseController
         $identity = \Yii::$app->getUser()->getIdentity();
 
         // NOTE: at this point we already validate user's token
-        // and authenticate them
+        // and authenticate him
         // all that's left to do is send correct response
         if (!$identity) {
             throw new \yii\web\ForbiddenHttpException('Access denied');

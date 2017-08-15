@@ -16,4 +16,11 @@ interface JWTSourceInterface
      */
     public function getSecretKey();
 
+    /**
+     * Returns claims that should be added to jwt token.
+     *
+     * @return array
+     */
+    public function getTokenClaims();
+
 }
