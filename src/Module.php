@@ -56,8 +56,6 @@ class Module extends BaseModule implements BootstrapInterface
 
     /** @var array The rules to be used in URL management. */
     public $urlRules = [
-        'OPTIONS <_c:.+>' => 'default/options',
-
         'POST session' => 'session/create',
         'DELETE session' => 'session/delete',
 
