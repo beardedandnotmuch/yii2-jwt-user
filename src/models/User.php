@@ -147,7 +147,9 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
      */
     public function loadAllowance($request, $action)
     {
-        return [$this->allowance, strtotime($this->allowance_updated_at)];
+        $date = new \DateTime($this->allowance_updated_at, new \DateTimeZone('UTC'));
+
+        return [$this->allowance, $date->format('U')];
     }
 
     /**
@@ -156,8 +158,8 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
     public function saveAllowance($request, $action, $allowance, $timestamp)
     {
         $this->allowance = $allowance;
-        $this->allowance_updated_at = date('Y-m-d H:i:s', $timestamp);
-        $this->save();
+        $this->allowance_updated_at = gmdate('Y-m-d H:i:s', $timestamp);
+        $this->save(true, ['allowance', 'allowance_updated_at']);
     }
 
     /**
