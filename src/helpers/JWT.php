@@ -13,7 +13,10 @@ use beardedandnotmuch\user\models\JWTSourceInterface;
 class JWT
 {
     /**
-     * undocumented function
+     * Generates JWT object.
+     *
+     * @param JWTSourceInterface $user
+     * @param integer|bool $duration if "false" expiration will be disabled
      *
      * @return Lcobucci\JWT\Token;
      */
@@ -31,7 +34,11 @@ class JWT
             ->setId($id, true)
             ->setIssuedAt($now)
             ->setNotBefore($now)
-            ->setExpiration($now + $duration);
+        ;
+
+        if ($duration !== false) {
+            $builder->setExpiration($now + $duration);
+        }
 
         foreach ($user->getTokenClaims() as $name => $value) {
             $builder->set($name, $value);
