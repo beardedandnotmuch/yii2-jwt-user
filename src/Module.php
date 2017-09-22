@@ -24,19 +24,19 @@ class Module extends BaseModule implements BootstrapInterface
     ];
 
     /**
-     * @var bool
+     * @var bool|callable
      * Login user right after registration.
      */
     public $forceLogin = false;
 
     /**
-     * @var bool
+     * @var bool|callable
      * Send token through cookie.
      */
     public $useCookie = false;
 
     /**
-     * @var integer
+     * @var integer|bool|callable
      * Token become expired after this time.
      */
     public $duration = 24 * 60 * 60;
@@ -85,9 +85,22 @@ class Module extends BaseModule implements BootstrapInterface
             $this->modelMap[$name] = $modelName;
         }
 
+        if (is_callable($this->forceLogin)) {
+            $this->forceLogin = call_user_func_array($this->forceLogin, [$app]);
+        }
+
+        if (is_callable($this->useCookie)) {
+            $this->useCookie = call_user_func_array($this->useCookie, [$app]);
+        }
+
+        if (is_callable($this->duration)) {
+            $this->duration = call_user_func_array($this->duration, [$app]);
+        }
+
         if ($app instanceof ConsoleApplication) {
             $this->controllerNamespace = 'beardedandnotmuch\user\commands';
         } else {
+
             Yii::$container->set('yii\web\User', [
                 'identityClass' => $this->modelMap['User'],
                 'enableAutoLogin' => false,
