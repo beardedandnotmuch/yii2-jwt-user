@@ -147,9 +147,13 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
      */
     public function loadAllowance($request, $action)
     {
-        $date = new \DateTime($this->allowance_updated_at, new \DateTimeZone('UTC'));
+        $value = null;
+        if ($this->allowance_updated_at !== null) {
+            $date = new \DateTime($this->allowance_updated_at, new \DateTimeZone('UTC'));
+            $value = $date->format('U');
+        }
 
-        return [$this->allowance, $date->format('U')];
+        return [$this->allowance, $value];
     }
 
     /**
