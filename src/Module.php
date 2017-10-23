@@ -79,7 +79,11 @@ class Module extends BaseModule implements BootstrapInterface
     public function bootstrap($app)
     {
         foreach ($this->modelMap as $name => $definition) {
-            $class = "beardedandnotmuch\\user\\models\\" . $name;
+            $class = "beardedandnotmuch\\user\\models\\$name";
+            if (is_callable($definition)) {
+                $definition = call_user_func_array($definition, [$app]);
+            }
+
             Yii::$container->set($class, $definition);
             $modelName = is_array($definition) ? $definition['class'] : $definition;
             $this->modelMap[$name] = $modelName;
