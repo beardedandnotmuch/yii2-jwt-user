@@ -7,6 +7,7 @@ use yii\base\Model as BaseModel;
 use Base64Url\Base64Url;
 use League\Uri\Schemes\Http;
 use League\Uri\Modifiers\MergeQuery;
+use beardedandnotmuch\user\helpers\Token;
 
 class ResetPasswordForm extends BaseModel
 {
@@ -52,10 +53,10 @@ class ResetPasswordForm extends BaseModel
         $user = $this->getUser();
         $user->setResetPasswordToken($token)->save(false);
 
-        return Base64Url::encode(json_encode([
+        return Token::encode([
             'id' => $user->id,
             'token' => $token,
-        ]));
+        ]);
     }
 
     /**

@@ -14,6 +14,9 @@ class Module extends BaseModule implements BootstrapInterface
     const EVENT_AFTER_LOGIN = 'afterLogin';
     const EVENT_BEFORE_LOGOUNT = 'beforeLogout';
     const EVENT_AFTER_LOGOUT = 'afterLogout';
+    const EVENT_BEFORE_REGISTER = 'beforeRegistration';
+    const EVENT_AFTER_REGISTER = 'afterRegistration';
+    const EVENT_AFTER_EMAIL_CONFIRMATION = 'afterEmailConfirmation';
 
     /** @var array Model map */
     public $modelMap = [
@@ -69,6 +72,8 @@ class Module extends BaseModule implements BootstrapInterface
         'PUT password' => 'password/update',
         'POST password/reset' => 'password/reset',
         'PUT password/reset' => 'password/replace',
+
+        'POST confirm' => 'confirm/index',
 
         'POST heartbeat' => 'token/update',
     ];

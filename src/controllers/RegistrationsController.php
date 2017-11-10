@@ -6,6 +6,8 @@ use Yii;
 use yii\rest\Controller as BaseController;
 use beardedandnotmuch\user\filters\AuthByToken;
 use beardedandnotmuch\user\filters\UpdateToken;
+use beardedandnotmuch\user\events\AfterRegistrationEvent;
+use beardedandnotmuch\user\Module;
 
 class RegistrationsController extends BaseController
 {
@@ -45,6 +47,8 @@ class RegistrationsController extends BaseController
             throw new \yii\web\BadRequestHttpException();
         }
 
+        $this->module->trigger(Module::EVENT_BEFORE_REGISTER);
+
         $request = Yii::$app->getRequest();
         $form = Yii::$container->get('beardedandnotmuch\user\models\RegistrationForm');
 
@@ -57,6 +61,11 @@ class RegistrationsController extends BaseController
         if ($this->module->forceLogin) {
             Yii::$app->getUser()->login($form->getUser());
         }
+
+        $this->module->trigger(Module::EVENT_AFTER_REGISTER, Yii::createObject([
+            'class' => AfterRegistrationEvent::class,
+            'form' => $form,
+        ]));
 
         return $form->toArray();
     }
