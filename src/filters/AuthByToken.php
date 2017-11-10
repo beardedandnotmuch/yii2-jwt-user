@@ -29,15 +29,7 @@ class AuthByToken extends AuthMethod
      */
     public function authenticate($user, $request, $response)
     {
-        $token = $this->getTokenFromHeader($request);
-
-        if (!$token) {
-            $token = $this->getTokenFromCookie($request);
-        }
-
-        if (!$token) {
-            $token = $this->getTokenFromQuery($request);
-        }
+        $token = $this->getToken($request);
 
         if ($token) {
             $identity = $user->loginByAccessToken($token, get_class($this));
@@ -49,6 +41,28 @@ class AuthByToken extends AuthMethod
         }
 
         return null;
+    }
+
+    /**
+     * Returns token from the request.
+     *
+     * @param \yii\web\Request $request
+     *
+     * @return string|null
+     */
+    public function getToken($request)
+    {
+        $token = $this->getTokenFromHeader($request);
+
+        if (!$token) {
+            $token = $this->getTokenFromCookie($request);
+        }
+
+        if (!$token) {
+            $token = $this->getTokenFromQuery($request);
+        }
+
+        return $token;
     }
 
     /**

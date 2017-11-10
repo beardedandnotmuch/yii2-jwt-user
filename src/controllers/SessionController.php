@@ -9,6 +9,7 @@ use yii\web\UnauthorizedHttpException;
 use beardedandnotmuch\user\filters\UpdateToken;
 use beardedandnotmuch\user\filters\AuthByToken;
 use beardedandnotmuch\user\Module;
+use beardedandnotmuch\user\models\DestroyedToken;
 
 class SessionController extends BaseController
 {
@@ -62,7 +63,7 @@ class SessionController extends BaseController
      */
     public function actionDelete()
     {
-        $this->module->trigger(Module::EVENT_BEFORE_LOGOUNT);
+        $this->module->trigger(Module::EVENT_BEFORE_LOGOUT);
 
         $user = Yii::$app->getUser();
         /*
@@ -82,6 +83,9 @@ class SessionController extends BaseController
         } else {
             $response->getHeaders()->set($behavior->headerName, '');
         }
+
+        $token = $this->getBehavior('authenticator')->getToken(Yii::$app->getRequest());
+        $user->getIdentity()->link('destroyedTokens', DestroyedToken::fromString($token));
 
         $this->module->trigger(Module::EVENT_AFTER_LOGOUT);
 

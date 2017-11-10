@@ -172,6 +172,11 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
     public static function findIdentityByAccessToken($token, $type = null)
     {
         try {
+
+            if (DestroyedToken::isExist($token)) {
+                throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
+            }
+
             $token = (new JWTParser())->parse($token);
             $jti = $token->getHeader('jti');
 
@@ -271,4 +276,13 @@ class User extends BaseModel implements IdentityInterface, RateLimitInterface, J
 
         return $this;
     }
+
+    /**
+     * @return \yii\db\ActiveRecord
+     */
+    public function getDestroyedTokens()
+    {
+        return $this->hasMany(DestroyedToken::class, ['user_id' => 'id']);
+    }
+
 }

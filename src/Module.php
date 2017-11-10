@@ -12,7 +12,7 @@ class Module extends BaseModule implements BootstrapInterface
 {
     const EVENT_BEFORE_LOGIN = 'beforeLogin';
     const EVENT_AFTER_LOGIN = 'afterLogin';
-    const EVENT_BEFORE_LOGOUNT = 'beforeLogout';
+    const EVENT_BEFORE_LOGOUT = 'beforeLogout';
     const EVENT_AFTER_LOGOUT = 'afterLogout';
     const EVENT_BEFORE_REGISTER = 'beforeRegistration';
     const EVENT_AFTER_REGISTER = 'afterRegistration';
