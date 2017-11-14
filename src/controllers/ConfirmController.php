@@ -18,8 +18,10 @@ class ConfirmController extends BaseController
      *
      * @return void
      */
-    public function actionIndex($token)
+    public function actionIndex()
     {
+        $token = Yii::$app->getRequest()->post('token');
+
         try {
             $data = Token::decode($token);
         } catch (Exception $e) {
