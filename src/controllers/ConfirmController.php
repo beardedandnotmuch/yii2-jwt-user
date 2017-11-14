@@ -14,7 +14,7 @@ use beardedandnotmuch\user\events\AfterEmailConfirmationEvent;
 class ConfirmController extends BaseController
 {
     /**
-     * undocumented function
+     * Marks email of user as confirmed.
      *
      * @return void
      */
