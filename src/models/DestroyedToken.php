@@ -71,10 +71,16 @@ class DestroyedToken extends \yii\db\ActiveRecord
     {
         $jwt = (new JWTParser())->parse((string) $token);
 
+        $expiredAt = null;
+        if ($jwt->hasClaim('exp')) {
+            $expiredAt = date('Y-m-d H:i:s', $jwt->getClaim('exp'));
+        }
+
         $model = new self();
+
         $model->setAttributes([
             'token_hash' => md5($token),
-            'expired_at' => date('Y-m-d H:i:s', $jwt->getClaim('exp')),
+            'expired_at' => $expiredAt,
             'created_at' => date('Y-m-d H:i:s'),
         ]);
 
