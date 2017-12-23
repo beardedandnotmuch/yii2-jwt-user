@@ -10,6 +10,9 @@ use beardedandnotmuch\user\filters\UpdateToken;
 use beardedandnotmuch\user\filters\AuthByToken;
 use beardedandnotmuch\user\Module;
 use beardedandnotmuch\user\models\DestroyedToken;
+use beardedandnotmuch\user\events\BeforeLoginEvent;
+use beardedandnotmuch\user\events\AfterLoginEvent;
+use beardedandnotmuch\user\events\AfterLogoutEvent;
 
 class SessionController extends BaseController
 {
@@ -41,16 +44,23 @@ class SessionController extends BaseController
      */
     public function actionCreate()
     {
-        $this->module->trigger(Module::EVENT_BEFORE_LOGIN);
         $request = Yii::$app->getRequest();
         $form = Yii::$container->get('beardedandnotmuch\user\models\LoginForm');
         $form->setAttributes($request->post());
+
+        $this->module->trigger(Module::EVENT_BEFORE_LOGIN, Yii::createObject([
+            'class' => BeforeLoginEvent::class,
+            'form' => $form,
+        ]));
 
         if (!$form->login()) {
             return $form;
         }
 
-        $this->module->trigger(Module::EVENT_AFTER_LOGIN);
+        $this->module->trigger(Module::EVENT_AFTER_LOGIN, Yii::createObject([
+            'class' => AfterLoginEvent::class,
+            'form' => $form,
+        ]));
 
         return $form->toArray();
     }
@@ -87,7 +97,10 @@ class SessionController extends BaseController
         $token = $this->getBehavior('authenticator')->getToken(Yii::$app->getRequest());
         $user->getIdentity()->link('destroyedTokens', DestroyedToken::fromString($token));
 
-        $this->module->trigger(Module::EVENT_AFTER_LOGOUT);
+        $this->module->trigger(Module::EVENT_AFTER_LOGOUT, Yii::createObject([
+            'class' => AfterLogoutEvent::class,
+            'identity' => $identity,
+        ]));
 
         return $user->logout();
     }
