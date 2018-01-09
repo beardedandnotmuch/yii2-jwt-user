@@ -96,11 +96,16 @@ class PasswordController extends BaseController
      */
     protected function sendResetPasswordInstruction($form)
     {
-        $params = [
-            'url' => $form->createUrl(),
-            'email' => $form->email,
-            'text' => 'Someone has requested a link to change your password. You can do this through the link below',
-        ];
+        $params = array_merge(
+            [
+                'text' => 'Someone has requested a link to change your password. You can do this through the link below',
+            ],
+            $form->getEmailParams(),
+            [
+                'url' => $form->createUrl(),
+                'email' => $form->getEmail(),
+            ]
+        );
 
         $mailer = Yii::$app->getMailer();
         $mailer->setViewPath("{$this->module->viewPath}/mail");

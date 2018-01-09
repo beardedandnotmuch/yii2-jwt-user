@@ -73,7 +73,27 @@ class ResetPasswordForm extends BaseModel
     }
 
     /**
-     * undocumented function
+     * Returns email address which will be used as setTo param.
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Returns array with params for the email.
+     *
+     * @return array
+     */
+    public function getEmailParams()
+    {
+        return [];
+    }
+
+    /**
+     * Returns user instance.
      *
      * @return User
      */

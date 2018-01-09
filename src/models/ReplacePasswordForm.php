@@ -29,7 +29,7 @@ class ReplacePasswordForm extends BaseModel
             'requiredFields' => [['token', 'password', 'password_repeat'], 'required'],
 
             // password
-            ['password', 'compare', 'compareAttribute' => 'password_repeat'],
+            'passwordsAreEqual' => ['password', 'compare', 'compareAttribute' => 'password_repeat'],
 
             // token
             'tokenIsValid' => ['token', 'validateToken'],
