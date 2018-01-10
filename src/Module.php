@@ -17,6 +17,7 @@ class Module extends BaseModule implements BootstrapInterface
     const EVENT_BEFORE_REGISTER = 'beforeRegistration';
     const EVENT_AFTER_REGISTER = 'afterRegistration';
     const EVENT_AFTER_EMAIL_CONFIRMATION = 'afterEmailConfirmation';
+    const EVENT_SEND_RESET_PASSWORD = 'sendResetPassword';
 
     /** @var array Model map */
     public $modelMap = [
@@ -132,6 +133,12 @@ class Module extends BaseModule implements BootstrapInterface
 
             // Add module URL rules.
             $app->urlManager->addRules([$rule], false);
+
+            // default events handlers
+            if (!$this->hasEventHandlers(self::EVENT_SEND_RESET_PASSWORD)) {
+                $this->on(self::EVENT_SEND_RESET_PASSWORD, [$this, 'sendResetPasswordInstruction']);
+            }
+
         }
     }
 
@@ -161,4 +168,29 @@ class Module extends BaseModule implements BootstrapInterface
 
         return $config;
     }
+
+    /**
+     * Send email with reset password instruction to the user.
+     *
+     * @param events\SendResetPasswordEvent $event
+     *
+     * @return bool
+     */
+    protected function sendResetPasswordInstruction($event)
+    {
+        $form = $event->form;
+        $mailer = $event->mailer;
+
+        $params = array_merge($form->getEmailParams(), [
+            'url' => $form->createUrl(),
+            'email' => $form->getEmail(),
+        ]);
+
+        return $mailer->compose('auth/reset_password', $params)
+            ->setFrom(Yii::$app->params['adminEmail'])
+            ->setTo($form->email)
+            ->setSubject('Reset password instructions')
+            ->send();
+    }
+
 }
