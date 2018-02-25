@@ -3,7 +3,6 @@
 namespace beardedandnotmuch\user\controllers;
 
 use Yii;
-use yii\rest\Controller as BaseController;
 use beardedandnotmuch\user\helpers\Token;
 use beardedandnotmuch\user\models\User;
 use yii\web\BadRequestHttpException;
@@ -20,7 +19,7 @@ class ConfirmController extends BaseController
      */
     public function actionIndex()
     {
-        $token = Yii::$app->getRequest()->post('token');
+        $token = $this->request->post('token');
 
         try {
             $data = Token::decode($token);
@@ -42,12 +41,11 @@ class ConfirmController extends BaseController
             throw new NotFoundHttpException('User not found');
         }
 
-        $security = Yii::$app->getSecurity();
-        if (!$security->validatePassword($data['token'], $user->confirm_token_hash)) {
+        if (!$this->security->validatePassword($data['token'], $user->confirm_token_hash)) {
             throw new BadRequestHttpException('Confirm token is invalid');
         }
 
-        $transaction = Yii::$app->db->beginTransaction();
+        $transaction = $this->db->beginTransaction();
 
         try {
             $user->confirm_token_hash = null;

@@ -4,7 +4,6 @@ namespace beardedandnotmuch\user\controllers;
 
 use beardedandnotmuch\user\filters\UpdateToken;
 use beardedandnotmuch\user\filters\AuthByToken;
-use yii\rest\Controller as BaseController;
 
 class TokenController extends BaseController
 {
@@ -37,7 +36,7 @@ class TokenController extends BaseController
         /*
          * @var yii\web\IdentityInterface
          */
-        $identity = \Yii::$app->getUser()->getIdentity();
+        $identity = $this->user->getIdentity();
 
         // NOTE: at this point we already validate user's token
         // and authenticate him

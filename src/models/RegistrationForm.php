@@ -73,7 +73,7 @@ class RegistrationForm extends BaseRegistrationForm
             'redirect_url' => $this->confirm_success_url,
         ];
 
-        $url = \Yii::$app->getUrlManager()->createAbsoluteUrl($query);
+        $url = Yii::$app->getUrlManager()->createAbsoluteUrl($query);
 
         $mailer = Yii::$app->getMailer();
         $mailer->setViewPath("{$this->module->viewPath}/mail");
@@ -82,7 +82,7 @@ class RegistrationForm extends BaseRegistrationForm
                 'email' => $user->email,
                 'confirm_url' => $url,
             ])
-            ->setFrom(\Yii::$app->params['adminEmail'])
+            ->setFrom(Yii::$app->params['adminEmail'])
             ->setTo($user->email)
             ->setSubject('Email confirmation')
             ->send();

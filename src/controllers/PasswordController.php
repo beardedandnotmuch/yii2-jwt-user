@@ -3,7 +3,6 @@
 namespace beardedandnotmuch\user\controllers;
 
 use Yii;
-use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use yii\web\BadRequestHttpException;
@@ -43,13 +42,13 @@ class PasswordController extends BaseController
     public function actionUpdate()
     {
         $form = Yii::$container->get('beardedandnotmuch\user\models\PasswordForm');
-        $form->setAttributes(Yii::$app->getRequest()->post());
+        $form->setAttributes($this->request->post());
 
         if (!$form->validate()) {
             return $form;
         }
 
-        $user = Yii::$app->getUser()->getIdentity();
+        $user = $this->user->getIdentity();
 
         return ['success' => $user->setPassword($form->new_password)->save(false)];
     }
@@ -62,7 +61,7 @@ class PasswordController extends BaseController
     public function actionReplace()
     {
         $form = Yii::$container->get('beardedandnotmuch\user\models\ReplacePasswordForm');
-        $form->setAttributes(Yii::$app->getRequest()->post());
+        $form->setAttributes($this->request->post());
 
         if (!$form->validate()) {
             return $form;
@@ -82,7 +81,7 @@ class PasswordController extends BaseController
     public function actionReset()
     {
         $form = Yii::$container->get('beardedandnotmuch\user\models\ResetPasswordForm');
-        $form->setAttributes(Yii::$app->getRequest()->post());
+        $form->setAttributes($this->request->post());
 
         if (!$form->validate()) {
             return $form;
@@ -91,23 +90,10 @@ class PasswordController extends BaseController
         $this->module->trigger(Module::EVENT_SEND_RESET_PASSWORD, Yii::createObject([
             'class' => SendResetPasswordEvent::class,
             'form' => $form,
-            'mailer' => $this->getMailer(),
+            'mailer' => $this->mailer,
         ]));
 
         return ['success' => true];
-    }
-
-    /**
-     * Returns mailer instance.
-     *
-     * @return yii\mail\MailerInterface
-     */
-    protected function getMailer()
-    {
-        $mailer = Yii::$app->getMailer();
-        $mailer->setViewPath("{$this->module->viewPath}/mail");
-
-        return $mailer;
     }
 
 }

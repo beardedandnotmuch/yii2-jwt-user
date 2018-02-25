@@ -3,7 +3,6 @@
 namespace beardedandnotmuch\user\controllers;
 
 use Yii;
-use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use beardedandnotmuch\user\filters\AuthByToken;
@@ -30,7 +29,7 @@ class UserController extends BaseController
      */
     public function actionGet()
     {
-        $user = Yii::$app->getUser()->getIdentity();
+        $user = $this->user->getIdentity();
         $user->clearErrors();
 
         return $user;
@@ -43,10 +42,10 @@ class UserController extends BaseController
      */
     public function actionUpdate()
     {
-        $user = Yii::$app->getUser()->getIdentity();
+        $user = $this->user->getIdentity();
         $class = get_class($user);
         $user->setScenario($class::SCENARIO_UPDATE);
-        $user->setAttributes(Yii::$app->getRequest()->post());
+        $user->setAttributes($this->request->post());
 
         $user->save();
 

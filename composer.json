@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.0",
+        "yiisoft/yii2": "~2.0.13",
         "lcobucci/jwt": "~3.2",
         "league/uri-manipulations": "^1.0",
         "league/uri-schemes": "^1.0",

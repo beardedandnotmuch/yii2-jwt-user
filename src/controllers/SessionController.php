@@ -3,7 +3,6 @@
 namespace beardedandnotmuch\user\controllers;
 
 use Yii;
-use yii\rest\Controller as BaseController;
 use yii\web\NotFoundHttpException;
 use yii\web\UnauthorizedHttpException;
 use beardedandnotmuch\user\filters\UpdateToken;
@@ -44,9 +43,8 @@ class SessionController extends BaseController
      */
     public function actionCreate()
     {
-        $request = Yii::$app->getRequest();
         $form = Yii::$container->get('beardedandnotmuch\user\models\LoginForm');
-        $form->setAttributes($request->post());
+        $form->setAttributes($this->request->post());
 
         $this->module->trigger(Module::EVENT_BEFORE_LOGIN, Yii::createObject([
             'class' => BeforeLoginEvent::class,
@@ -75,7 +73,10 @@ class SessionController extends BaseController
     {
         $this->module->trigger(Module::EVENT_BEFORE_LOGOUT);
 
-        $user = Yii::$app->getUser();
+        $user = $this->user;
+        $request = $this->request;
+        $response = $this->response;
+
         /*
          * @var yii\web\IdentityInterface
          */
@@ -85,7 +86,6 @@ class SessionController extends BaseController
             throw new NotFoundHttpException('User was not found or was not logged in');
         }
 
-        $response = Yii::$app->getResponse();
         $behavior = $this->getBehavior('updatetoken');
 
         if ($this->module->useCookie) {
@@ -94,8 +94,8 @@ class SessionController extends BaseController
             $response->getHeaders()->set($behavior->headerName, '');
         }
 
-        $token = $this->getBehavior('authenticator')->getToken(Yii::$app->getRequest());
-        $user->getIdentity()->link('destroyedTokens', DestroyedToken::fromString($token));
+        $token = $this->getBehavior('authenticator')->getToken($request);
+        $identity->link('destroyedTokens', DestroyedToken::fromString($token));
 
         $this->module->trigger(Module::EVENT_AFTER_LOGOUT, Yii::createObject([
             'class' => AfterLogoutEvent::class,
