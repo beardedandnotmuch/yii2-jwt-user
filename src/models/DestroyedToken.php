@@ -94,7 +94,7 @@ class DestroyedToken extends \yii\db\ActiveRecord
      */
     public static function isExist($token)
     {
-        return self::findOne(['token_hash' => md5($token)]) !== null;
+        return self::find()->andWhere(['token_hash' => md5($token)])->exists();
     }
 
 }

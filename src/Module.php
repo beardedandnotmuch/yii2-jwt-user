@@ -19,6 +19,11 @@ class Module extends BaseModule implements BootstrapInterface
     const EVENT_AFTER_EMAIL_CONFIRMATION = 'afterEmailConfirmation';
     const EVENT_SEND_RESET_PASSWORD = 'sendResetPassword';
 
+    /**
+     * Rate limit
+     */
+    const RATE_LIMIT_WINDOW = 600;
+
     /** @var array Model map */
     public $modelMap = [
         'User'             => 'beardedandnotmuch\user\models\User',
