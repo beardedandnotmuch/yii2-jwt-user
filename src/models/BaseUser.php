@@ -147,12 +147,16 @@ abstract class BaseUser extends BaseModel implements IdentityInterface, JWTSourc
     public static function findIdentityByAccessToken($token, $type = null)
     {
         try {
-
             if (DestroyedToken::isExist($token)) {
                 throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
             }
 
             $token = (new JWTParser())->parse($token);
+
+            if ($token->isExpired()) {
+                throw new UnauthorizedHttpException('Your token is expired.');
+            }
+
             $jti = $token->getHeader('jti');
 
             if (empty($jti)) {
@@ -161,8 +165,8 @@ abstract class BaseUser extends BaseModel implements IdentityInterface, JWTSourc
 
             $user = static::findOne($jti);
 
-            if ($token->isExpired()) {
-                throw new UnauthorizedHttpException('Your token is expired.');
+            if (!$user) {
+                throw new UnauthorizedHttpException('Your request was made with invalid credentials.');
             }
 
             if (!$token->verify(new Signer(), $user->getSecretKey())) {
@@ -170,6 +174,7 @@ abstract class BaseUser extends BaseModel implements IdentityInterface, JWTSourc
             }
 
             return $user;
+
         } catch (\Exception $e) {
             return false;
         }
