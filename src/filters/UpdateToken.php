@@ -39,19 +39,35 @@ class UpdateToken extends BaseFilter
             return $result;
         }
 
-        $token = JWT::token($user->getIdentity(), $this->duration);
+        $identity = $user->getIdentity();
+        $token = JWT::token($identity, $this->duration);
+        $identity->setAuthToken((string) $token);
 
+        if ($result instanceof Response) {
+            $this->injectToken($result, $token);
+        } else {
+            $this->injectToken(Yii::$app->getResponse(), $token);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Response $response
+     * @param Lcobucci\JWT\Token $token
+     */
+    public function injectToken($response, $token)
+    {
         if ($this->useCookie) {
             $cookie = new Cookie();
             $cookie->name = $this->cookieName;
             $cookie->value = (string) $token;
             $cookie->expire = time() + (int) $this->duration;
             $cookie->httpOnly = false;
-            Yii::$app->getResponse()->getCookies()->add($cookie);
+            $response->getCookies()->add($cookie);
         } else {
-            Yii::$app->getResponse()->getHeaders()->set($this->headerName, (string) $token);
+            $response->getHeaders()->set($this->headerName, (string) $token);
         }
-
-        return $result;
     }
+
 }

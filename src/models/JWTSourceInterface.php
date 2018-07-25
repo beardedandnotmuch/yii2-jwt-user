@@ -10,7 +10,7 @@ interface JWTSourceInterface
     public function getPrimaryKey($asArray = false);
 
     /**
-     * undocumented function
+     * Returns a string to sign token
      *
      * @return string
      */
@@ -22,5 +22,19 @@ interface JWTSourceInterface
      * @return array
      */
     public function getTokenClaims();
+
+    /**
+     * Allows to store a token for further processing.
+     *
+     * @param string $token
+     */
+    public function setAuthToken(string $token);
+
+    /**
+     * Returns recently created token.
+     *
+     * @return string
+     */
+    public function getAuthToken();
 
 }

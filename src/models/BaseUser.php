@@ -33,6 +33,11 @@ abstract class BaseUser extends BaseModel implements IdentityInterface, JWTSourc
     const SCENARIO_UPDATE = 'update';
 
     /**
+     * @var string
+     */
+    protected $authToken;
+
+    /**
      * {@inheritdoc}
      */
     public static function tableName()
@@ -139,6 +144,22 @@ abstract class BaseUser extends BaseModel implements IdentityInterface, JWTSourc
      */
     public function validateAuthKey($authKey)
     {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthToken()
+    {
+        return $this->authToken;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAuthToken(string $token)
+    {
+        $this->authToken = $token;
     }
 
     /**

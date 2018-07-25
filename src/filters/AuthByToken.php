@@ -37,6 +37,8 @@ class AuthByToken extends AuthMethod
                 $this->handleFailure($response);
             }
 
+            $identity->setAuthToken($token);
+
             return $identity;
         }
 

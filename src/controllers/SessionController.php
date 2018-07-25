@@ -12,6 +12,7 @@ use beardedandnotmuch\user\models\DestroyedToken;
 use beardedandnotmuch\user\events\BeforeLoginEvent;
 use beardedandnotmuch\user\events\AfterLoginEvent;
 use beardedandnotmuch\user\events\AfterLogoutEvent;
+use yii\web\Application;
 
 class SessionController extends BaseController
 {
@@ -55,10 +56,12 @@ class SessionController extends BaseController
             return $form;
         }
 
-        $this->module->trigger(Module::EVENT_AFTER_LOGIN, Yii::createObject([
-            'class' => AfterLoginEvent::class,
-            'form' => $form,
-        ]));
+        Yii::$app->on(Application::EVENT_AFTER_REQUEST, function ($event) use ($form) {
+            $this->module->trigger(Module::EVENT_AFTER_LOGIN, Yii::createObject([
+                'class' => AfterLoginEvent::class,
+                'form' => $form,
+            ]));
+        });
 
         return $form->toArray();
     }
@@ -93,6 +96,8 @@ class SessionController extends BaseController
         } else {
             $response->getHeaders()->set($behavior->headerName, '');
         }
+
+        $identity->setAuthToken('');
 
         $token = $this->getBehavior('authenticator')->getToken($request);
         $identity->link('destroyedTokens', DestroyedToken::fromString($token));
