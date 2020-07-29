@@ -26,6 +26,7 @@ class SessionController extends BaseController
             'authenticator' => [
                 'class' => AuthByToken::class,
                 'only' => ['delete'],
+                'sourceOrder' => $this->module->tokenSourceOrder,
             ],
             'updatetoken' => [
                 'class' => UpdateToken::class,

@@ -4,11 +4,17 @@ namespace beardedandnotmuch\user\filters;
 
 use Yii;
 use yii\filters\auth\AuthMethod;
-use beardedandnotmuch\user\helpers\JWT;
-use yii\web\Cookie;
+use yii\base\InvalidConfigException;
 
 class AuthByToken extends AuthMethod
 {
+    /**
+     * @var string
+     */
+    const SOURCE_HEADER = 'header';
+    const SOURCE_COOKIE = 'cookie';
+    const SOURCE_QUERY_PARAM = 'query_param';
+
     /**
      * @var string the HTTP authentication realm
      */
@@ -23,6 +29,25 @@ class AuthByToken extends AuthMethod
      * @var string
      */
     public $queryParamName = 'token';
+
+    /**
+     * @var string[]
+     */
+    public $sourceOrder = [
+        self::SOURCE_HEADER,
+        self::SOURCE_COOKIE,
+        self::SOURCE_QUERY_PARAM,
+    ];
+
+    /**
+     * @var array
+     */
+    private $sources = [
+        self::SOURCE_HEADER => 'getTokenFromHeader',
+        self::SOURCE_COOKIE => 'getTokenFromCookie',
+        self::SOURCE_QUERY_PARAM => 'getTokenFromQuery',
+    ];
+
 
     /**
      * @inheritdoc
@@ -54,17 +79,17 @@ class AuthByToken extends AuthMethod
      */
     public function getToken($request)
     {
-        $token = $this->getTokenFromHeader($request);
+        foreach ($this->sourceOrder as $sourceName) {
+            if (!array_key_exists($sourceName, $this->sources)) {
+                throw new InvalidConfigException("Source \"$sourceName\" doesn't exists");
+            }
 
-        if (!$token) {
-            $token = $this->getTokenFromCookie($request);
+            $method = $this->sources[$sourceName];
+
+            if ($token = $this->$method($request)) {
+                return $token;
+            }
         }
-
-        if (!$token) {
-            $token = $this->getTokenFromQuery($request);
-        }
-
-        return $token;
     }
 
     /**

@@ -4,9 +4,11 @@ namespace beardedandnotmuch\user;
 
 use Yii;
 use yii\base\Module as BaseModule;
-use yii\web\User as WebUser;
 use yii\base\BootstrapInterface;
 use yii\console\Application as ConsoleApplication;
+use beardedandnotmuch\user\filters\AuthByToken;
+use yii\base\InvalidConfigException;
+use yii\web\User;
 
 class Module extends BaseModule implements BootstrapInterface
 {
@@ -56,6 +58,15 @@ class Module extends BaseModule implements BootstrapInterface
      * @See [[GroupUrlRule::prefix]]
      */
     public $urlPrefix = 'api/user';
+
+    /**
+     * @var array
+     */
+    public $tokenSourceOrder = [
+        AuthByToken::SOURCE_HEADER,
+        AuthByToken::SOURCE_COOKIE,
+        AuthByToken::SOURCE_QUERY_PARAM,
+    ];
 
     /**
      * @var string
@@ -116,12 +127,16 @@ class Module extends BaseModule implements BootstrapInterface
             $this->controllerNamespace = 'beardedandnotmuch\user\commands';
         } else {
 
-            Yii::$container->set('yii\web\User', [
+            Yii::$container->set(User::class, [
                 'identityClass' => $this->modelMap['User'],
                 'enableAutoLogin' => false,
                 'enableSession' => false,
                 'loginUrl' => null,
             ]);
+
+            if ($this->useCookie && $this->get('request')->enableCookieValidation) {
+                throw new InvalidConfigException('To use cookie as source of token disable cookie validation');
+            }
 
             $configUrlRule = [
                 'prefix' => $this->urlPrefix,
