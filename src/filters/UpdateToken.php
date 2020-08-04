@@ -27,6 +27,11 @@ class UpdateToken extends BaseFilter
     /**
      * @var bool
      */
+    public $useHeader = true;
+
+    /**
+     * @var bool
+     */
     public $useCookie = false;
 
     /**
@@ -65,7 +70,9 @@ class UpdateToken extends BaseFilter
             $cookie->expire = time() + (int) $this->duration;
             $cookie->httpOnly = false;
             $response->getCookies()->add($cookie);
-        } else {
+        }
+
+        if ($this->useHeader) {
             $response->getHeaders()->set($this->headerName, (string) $token);
         }
     }
